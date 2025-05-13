@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Mes Projets JavaScript</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 50px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+    }
+    .links {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .links a {
+      display: inline-block;
+      padding: 15px 25px;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .links a:hover {
+      background: #2980b9;
+    }
+  </style>
 </head>
 <body>
-    <div class="calculatrice">
-        <div class="screen"></div>
-        <div class="input">
-        <button data-key="8" class="button">C</button>
-        <button data-key="53" class="button">(</button>
-        <button data-key="219" class="button">)</button>
-        <button data-key="191" class="button">/</button>
-        <button data-key="55" class="button">7</button>
-        <button data-key="56" class="button">8</button>
-        <button data-key="57" class="button">9</button>
-        <button data-key="220" class="button">*</button>
-        <button data-key="52" class="button">4</button>
-        <button data-key="53" class="button">5</button>
-        <button data-key="54" class="button">6</button>
-        <button data-key="54" class="button">-</button>
-        <button data-key="49" class="button">1</button>
-        <button data-key="50" class="button">2</button>
-        <button data-key="51" class="button">3</button>
-        <button data-key="187" class="button">+</button>
-        <button data-key="48" class="button">0</button>
-        <button data-key="190" class="button">.</button>
-        <button data-key="187" class="button">=</button>
-    </div>
-    </div>
-    <script src="./main.js"></script>
+  <h1>Bienvenue sur mon Portfolio JavaScript</h1>
+  <div class="links">
+    <a href="./projet/calculatrice/index.html">🧮 Projet 1 : Calculatrice</a>
+    <a href="./projet/form/index.html">⏱️ Projet 2 : formulaire</a>
+    <a href="./projet/pokedex/index.html">📘 Projet 3 : Pokédex</a>
+  </div>
 </body>
 </html>
