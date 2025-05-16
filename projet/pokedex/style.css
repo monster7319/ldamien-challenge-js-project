@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+h1 {
+  color: #ef5350;
+}
+
+.card {
+  background: white;
+  padding: 10px;
+  margin: 10px auto;
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+img {
+  margin: 20px 0;
+  width: 150px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #ef5350;
+}
