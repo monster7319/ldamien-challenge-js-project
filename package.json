@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nodejs-nodemailer-outlook": "^1.2.4",
+    "nodemailer": "^7.0.3"
+  }
+}
