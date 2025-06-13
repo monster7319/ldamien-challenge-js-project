@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 
 const app = express();
 
@@ -11,26 +11,27 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Initialisation de la base SQLite
-const db = new sqlite3.Database('messages.db');
+// Connexion PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+// Création de la table messages si elle n'existe pas
+pool.query(`
+  CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,
     message TEXT NOT NULL,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  )`);
-});
+  )
+`);
 
-// Fonctionnalité supplémentaire : fonction pour stocker un message
-function storeMessage(email, message, callback) {
-  db.run(
-    `INSERT INTO messages (email, message) VALUES (?, ?)`,
-    [email, message],
-    function (err) {
-      callback(err);
-    }
+// Fonction pour stocker un message
+async function storeMessage(email, message) {
+  await pool.query(
+    'INSERT INTO messages (email, message) VALUES ($1, $2)',
+    [email, message]
   );
 }
 
@@ -43,18 +44,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Route POST pour recevoir et stocker les messages, puis envoyer l'email
+// Route POST pour enregistrer et envoyer le message
 app.post('/send', async (req, res) => {
     try {
         const { email, message } = req.body;
 
-        // Appel de la fonctionnalité de stockage
-        storeMessage(email, message, (err) => {
-          if (err) {
-            console.error('Erreur lors de l\'insertion en base :', err);
-            // On continue quand même pour l’envoi d’email
-          }
-        });
+        await storeMessage(email, message);
 
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -71,17 +66,16 @@ app.post('/send', async (req, res) => {
 });
 
 // (Optionnel) Route GET pour récupérer tous les messages
-app.get('/messages', (req, res) => {
-  db.all('SELECT * FROM messages ORDER BY date DESC', [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: 'Erreur lors de la récupération' });
-      return;
-    }
-    res.json(rows);
-  });
+app.get('/messages', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM messages ORDER BY date DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Erreur lors de la récupération' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => { // '0.0.0.0' pour Railway[1]
   console.log('Server running on port', PORT);
 });
